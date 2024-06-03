@@ -25,3 +25,5 @@
 - `repository`: 包含JPA仓库。
 - `service`: 包含业务逻辑和Web抓取服务。
 - `templates`: 包含Thymeleaf模板。
+
+- ###注：运行后请访问：http://localhost:8080/search
