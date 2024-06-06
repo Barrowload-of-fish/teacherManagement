@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>教师信息查询</title>
+</head>
+<body>
+<h1>教师信息查询</h1>
+<form action="#" th:action="@{/teacher}" method="get">
+  <label for="name">教师姓名（中文）:</label>
+  <input type="text" id="name" name="name" required>
+  <button type="submit">查询</button>
+</form>
+</body>
+</html>
