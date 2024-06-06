@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Management</title>
+</head>
+<body>
+<h1>Appointment List</h1>
+<table id="appointmentTable">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Student Name</th>
+    <th>Appointment Time</th>
+    <th>Teacher</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="appointment : ${appointments}">
+    <td th:text="${appointment.id}">0</td>
+    <td th:text="${appointment.studentName}">John Doe</td>
+    <td th:text="${appointment.appointmentTime_start}">2023-06-05T10:00</td>
+    <td th:text="${appointment.appointmentTime_end}">2023-06-05T10:00</td>
+    <td th:text="${appointment.teacher.name}">Mr. Smith</td>
+    <td>
+
+      <form action="/appointments/delete" method="post">
+        <input type="hidden" name="id" th:value="${appointment.id}" />
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<h2>Create New Appointment</h2>
+<form id="createForm" method="post" action="/appointments">
+  <label for="studentName">Student Name:</label>
+  <input type="text" id="studentName" name="studentName" required>
+
+  <label for="appointmentTime_start">Appointment Time——start:</label>
+  <input type="datetime-local" id="appointmentTime_start" name="appointmentTime_start" required>
+
+  <label for="appointmentTime_end">Appointment Time——end:</label>
+  <input type="datetime-local" id="appointmentTime_end" name="appointmentTime_end" required>
+
+  <label for="teacher">Teacher:</label>
+  <select id="teacher" name="teacherId" required>
+
+    <option th:each="teacher : ${teachers}" th:value="${teacher.id}" th:text="${teacher.name}"></option>
+  </select>
+  <button type="submit">Create</button>
+</form>
+</body>
+</html>

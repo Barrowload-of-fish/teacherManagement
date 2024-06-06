@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>教师信息</title>
+</head>
+<body>
+<h1>教师信息</h1>
+<div th:if="${teacher != null}">
+  <h2>教师基本信息</h2>
+  <p>姓名: <span th:text="${teacher.name}">Name</span></p>
+  <p>学院: <span th:text="${teacher.college}">College</span></p>
+  <p>职称: <span th:text="${teacher.title}">Title</span></p>
+  <p>电话: <span th:text="${teacher.phone}">Phone</span></p>
+  <p>邮箱: <span th:text="${teacher.email}">Email</span></p>
+  <p>地址: <span th:text="${teacher.address}">Address</span></p>
+  <p>主页: <a th:href="${teacher.homepageUrl}" th:text="${teacher.homepageUrl}">Homepage</a></p>
+  <p>研究方向: <span th:text="${teacher.researchDirection}">Research Direction</span></p>
+
+  <a href="/appointments">Make an Appointment</a>
+  <p>研究方向: <span th:text="${teacher.appointments}">Research Direction</span></p>
+</div>
+<div th:if="${teacher == null}">
+  <p>未找到教师信息。</p>
+</div>
+</body>
+</html>
