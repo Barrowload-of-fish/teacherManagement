@@ -5,9 +5,9 @@
 </head>
 <body>
 <h1>教师信息查询</h1>
-<form action="#" th:action="@{/teacher}" method="get">
-  <label for="name">教师姓名（中文）:</label>
-  <input type="text" id="name" name="name" required>
+<form th:action="@{/search}" method="post">
+  <label for="chineseName">教师姓名（中文）:</label>
+  <input type="text" id="chineseName" name="chineseName" required>
   <button type="submit">查询</button>
 </form>
 </body>

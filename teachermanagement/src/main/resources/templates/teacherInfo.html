@@ -15,6 +15,7 @@
   <p>地址: <span th:text="${teacher.address}">Address</span></p>
   <p>主页: <a th:href="${teacher.homepageUrl}" th:text="${teacher.homepageUrl}">Homepage</a></p>
   <p>研究方向: <span th:text="${teacher.researchDirection}">Research Direction</span></p>
+  <a href="/appointments">Make an Appointment</a>
 </div>
 <div th:if="${teacher == null}">
   <p>未找到教师信息。</p>

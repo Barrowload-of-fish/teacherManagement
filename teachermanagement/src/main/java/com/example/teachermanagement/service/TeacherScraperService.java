@@ -1,6 +1,9 @@
 package com.example.teachermanagement.service;
 
+import com.example.teachermanagement.model.Appointment;
 import com.example.teachermanagement.model.Teacher;
+import com.example.teachermanagement.repository.AppointmentRepository;
+import jakarta.persistence.Id;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -11,9 +14,16 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Service
 public class TeacherScraperService {
+        private final AppointmentRepository appointmentRepository;
+
+    public TeacherScraperService(AppointmentRepository appointmentRepository) {
+        this.appointmentRepository = appointmentRepository;
+    }
+
     public Teacher scrapeTeacherInfo(String chineseName) throws IOException {
         String pinyinName = convertToPinyin(chineseName);
         String url = "https://homepage.hit.edu.cn/" + pinyinName + "?lang=zh";
@@ -47,6 +57,8 @@ public class TeacherScraperService {
         teacher.setAddress(address);
         teacher.setHomepageUrl(homepageUrl);
         teacher.setResearchDirection(researchDirection); // 设置研究方向
+
+
 
         return teacher;
     }

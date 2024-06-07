@@ -5,6 +5,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import jakarta.persistence.*;
+import java.util.List;
+
+import java.time.LocalDateTime;
+
 @Entity
 public class Teacher {
 
@@ -20,6 +25,12 @@ public class Teacher {
     private String address;
     private String homepageUrl;
     private String researchDirection;
+
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Appointment> appointments;
+
+
 
     // Getters and Setters
 
@@ -94,4 +105,6 @@ public class Teacher {
     public void setResearchDirection(String researchDirection) {
         this.researchDirection = researchDirection;
     }
+
+
 }

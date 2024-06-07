@@ -1,6 +1,7 @@
 package com.example.teachermanagement.service;
 
 import com.example.teachermanagement.model.Teacher;
+import com.example.teachermanagement.model.Login;
 import com.example.teachermanagement.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,15 @@ import java.util.Optional;
 
 @Service
 public class TeacherService {
+
     @Autowired
     private TeacherRepository teacherRepository;
 
     @Autowired
     private TeacherScraperService teacherScraperService;
+
+    @Autowired
+    private LoginService loginService;
 
     public Teacher saveOrUpdateTeacher(Teacher teacher) {
         Optional<Teacher> existingTeacher = teacherRepository.findByEmail(teacher.getEmail());
@@ -27,7 +32,7 @@ public class TeacherService {
             updatedTeacher.setPhone(teacher.getPhone());
             updatedTeacher.setAddress(teacher.getAddress());
             updatedTeacher.setHomepageUrl(teacher.getHomepageUrl());
-            updatedTeacher.setResearchDirection(teacher.getResearchDirection()); // 保存研究方向
+            updatedTeacher.setResearchDirection(teacher.getResearchDirection());
             return teacherRepository.save(updatedTeacher);
         } else {
             return teacherRepository.save(teacher);
@@ -46,7 +51,7 @@ public class TeacherService {
         return teacherRepository.findAll();
     }
 
-    public Teacher getAndSaveTeacherInfo(String chineseName) throws IOException {
+    public Teacher getAndSaveTeacherInfo(String chineseName, String email, String password) throws IOException {
         Teacher scrapedTeacher = teacherScraperService.scrapeTeacherInfo(chineseName);
         Optional<Teacher> existingTeacher = teacherRepository.findByEmail(scrapedTeacher.getEmail());
         if (existingTeacher.isPresent()) {
@@ -59,16 +64,42 @@ public class TeacherService {
                 teacher.setPhone(scrapedTeacher.getPhone());
                 teacher.setAddress(scrapedTeacher.getAddress());
                 teacher.setHomepageUrl(scrapedTeacher.getHomepageUrl());
-                teacher.setResearchDirection(scrapedTeacher.getResearchDirection()); // 更新研究方向
+                teacher.setResearchDirection(scrapedTeacher.getResearchDirection());
                 isUpdated = true;
             }
             if (isUpdated) {
-                return teacherRepository.save(teacher);
-            } else {
-                return teacher;
+                teacherRepository.save(teacher);
             }
+
+            if (email != null && password != null) {
+                saveLogin(email, password);
+            }
+            return teacher;
         } else {
-            return teacherRepository.save(scrapedTeacher);
+            teacherRepository.save(scrapedTeacher);
+            if (email != null && password != null) {
+                saveLogin(email, password);
+            }
+            return scrapedTeacher;
         }
+    }
+
+    private void saveLogin(String email, String password) {
+        Login login = new Login();
+        login.setEmail(email);
+        login.setPassword(password);
+        loginService.saveLogin(login);
+    }
+
+    public Teacher getTeacherById(Long id) {
+        return teacherRepository.findById(id).orElse(null);
+    }
+
+    public Teacher saveTeacher(Teacher teacher) {
+        return teacherRepository.save(teacher);
+    }
+
+    public void deleteTeacher(Long id) {
+        teacherRepository.deleteById(id);
     }
 }
