@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师信息展示</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .main-container {
+            display: flex;
+            flex: 1;
+            margin-top: 80px; /* Height of the header */
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: width 0.3s;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            z-index: 1;
+            height: calc(100vh - 80px); /* Height of the sidebar */
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+            transition: margin-left 0.3s;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .teacher-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .teacher-info-table th, .teacher-info-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .teacher-info-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .teacher-info-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .toggle-btn {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 80px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 2;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .toggle-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>教师信息管理系统</h1>
+</div>
+<div class="main-container">
+    <div class="content" id="content">
+        <table class="teacher-info-table">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>学院</th>
+                <th>职称</th>
+                <th>电话</th>
+                <th>Email</th>
+                <th>地址</th>
+                <th>主页地址</th>
+                <th>研究方向</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="teacher : ${teachers}">
+                <td th:text="${teacher.name}"></td>
+                <td th:text="${teacher.college}"></td>
+                <td th:text="${teacher.title}"></td>
+                <td th:text="${teacher.phone}"></td>
+                <td th:text="${teacher.email}"></td>
+                <td th:text="${teacher.address}"></td>
+                <td><a th:href="${teacher.homepageUrl}" th:text="${teacher.homepageUrl}"></a></td>
+                <td th:text="${teacher.researchDirection}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="toggle-btn" id="toggle-btn">☰</div>
+
+<script>
+    document.getElementById('toggle-btn').addEventListener('click', function() {
+        var sidebar = document.getElementById('sidebar');
+        var content = document.getElementById('content');
+        if (sidebar.style.width === '200px') {
+            sidebar.style.width = '0';
+            content.style.marginLeft = '0';
+        } else {
+            sidebar.style.width = '200px';
+            content.style.marginLeft = '220px';
+        }
+    });
+</script>
+</body>
+</html>

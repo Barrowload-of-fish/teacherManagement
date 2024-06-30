@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>教师信息管理系统 - 教师科研成果编辑</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+            display: grid;
+            grid-template-rows: auto 1fr;
+            grid-template-columns: 200px 1fr;
+            grid-template-areas:
+                "header header"
+                "sidebar content";
+            height: 100vh;
+        }
+        .header {
+            grid-area: header;
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .sidebar {
+            grid-area: sidebar;
+            background-color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            grid-area: content;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: 1200px; /* Increased max-width for wider content */
+            margin: 0 auto; /* Center the content */
+        }
+        .welcome-message {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .welcome-message h1 {
+            font-size: 2em;
+            color: #4CAF50;
+        }
+        .welcome-message p {
+            font-size: 1.2em;
+        }
+        .toggle-btn {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "content";
+            }
+            .sidebar {
+                display: none;
+            }
+            .toggle-btn {
+                display: block;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+        .main-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .edit-button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-button:hover {
+            background-color: #45a049;
+        }
+        .add-project-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        .add-project-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>教师信息管理系统</h1>
+</div>
+
+<div class="content" id="content">
+    <div class="main-content">
+        <a href="/addproject" class="add-project-button">添加新的科研项目</a>
+        <h2 style="margin-top: 20px;">科研成果列表</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>项目名称</th>
+                <th>实验室</th>
+                <th>描述</th>
+                <th>负责人</th>
+                <th>学生人数</th>
+                <th>教师人数</th>
+                <th>开始日期</th>
+                <th>结束日期</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="project : ${projects}">
+                <td th:text="${project.name}">项目名称</td>
+                <td th:text="${project.laboratory}">实验室</td>
+                <td th:text="${project.description}">描述</td>
+                <td th:text="${project.leader}">负责人</td>
+                <td th:text="${project.numberOfStudents}">学生人数</td>
+                <td th:text="${project.numberOfTeachers}">教师人数</td>
+                <td th:text="${project.startDate}">开始日期</td>
+                <td th:text="${project.endDate}">结束日期</td>
+                <td th:text="${project.status}">状态</td>
+                <td>
+                    <a th:href="@{/edit/{id}(id=${project.projectId})}" class="edit-button">编辑</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="toggle-btn" id="toggle-btn">☰</div>
+
+<script>
+    document.getElementById('toggle-btn').addEventListener('click', function() {
+        var sidebar = document.getElementById('sidebar');
+        var content = document.getElementById('content');
+        if (sidebar.style.display === 'none') {
+            sidebar.style.display = 'block';
+        } else {
+            sidebar.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>

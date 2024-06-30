@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>选择身份</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    .button-container {
+      margin-top: 20px;
+    }
+    .button-container button {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      color: white;
+      background-color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    .button-container button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>请选择您的身份</h1>
+  <div class="button-container">
+    <form method="post" action="/selectRole">
+      <input type="hidden" name="role" value="student">
+      <button type="submit">学生</button>
+    </form>
+    <form method="post" action="/selectRole">
+      <input type="hidden" name="role" value="teacher">
+      <button type="submit">老师</button>
+    </form>
+    <form method="post" action="/selectRole">
+      <input type="hidden" name="role" value="admin">
+      <button type="submit">管理员</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

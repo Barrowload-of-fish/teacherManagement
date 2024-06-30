@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>教师信息管理系统 - 管理员列表</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: #333;
+            float: left;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: width 0.3s;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        .welcome-message {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .welcome-message h1 {
+            font-size: 2em;
+            color: #4CAF50;
+        }
+        .welcome-message p {
+            font-size: 1.2em;
+        }
+        .toggle-btn {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .toggle-btn {
+                display: block;
+            }
+        }
+        .main-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .delete-button {
+            padding: 5px 10px;
+            background-color: #ff4c4c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-button:hover {
+            background-color: #ff1a1a;
+        }
+        .add-admin-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        .add-admin-button:hover {
+            background-color: #45a049;
+        }
+        .password-toggle {
+            cursor: pointer;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>教师信息管理系统</h1>
+</div>
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li><a href="/teacher_message">教师信息</a></li>
+        <li><a href="/teacher_day">教师日程</a></li>
+        <li><a href="/admin_list">管理员列表</a></li>
+        <li><a href="/teacher_list">教师列表</a></li>
+        <li><a href="/student_list">学生列表</a></li>
+        <!-- Add other sidebar links as needed -->
+    </ul>
+</div>
+<div class="content" id="content">
+    <div class="main-content">
+        <h2>管理员列表</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>密码</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="admin : ${admins}">
+                <td th:text="${admin.name}">姓名</td>
+                <td>
+                    <span class="password-mask" th:text="'*******'" style="display:inline;"></span>
+                    <span class="password-real" th:text="${admin.password}" style="display:none;"></span>
+                    <span class="password-toggle" onclick="togglePassword(this)">查看</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="/add_admin" class="add-admin-button">添加管理员</a>
+    </div>
+</div>
+<div class="toggle-btn" id="toggle-btn">☰</div>
+
+<script>
+    document.getElementById('toggle-btn').addEventListener('click', function() {
+        var sidebar = document.getElementById('sidebar');
+        var content = document.getElementById('content');
+        if (sidebar.style.width === '200px') {
+            sidebar.style.width = '0';
+            content.style.marginLeft = '0';
+        } else {
+            sidebar.style.width = '200px';
+            content.style.marginLeft = '220px';
+        }
+    });
+
+    function togglePassword(element) {
+        var mask = element.previousElementSibling.previousElementSibling;
+        var real = element.previousElementSibling;
+        if (mask.style.display === "none") {
+            mask.style.display = "inline";
+            real.style.display = "none";
+            element.textContent = "查看";
+        } else {
+            mask.style.display = "none";
+            real.style.display = "inline";
+            element.textContent = "隐藏";
+        }
+    }
+</script>
+</body>
+</html>

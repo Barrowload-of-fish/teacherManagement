@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建新的预约</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: white;
+            font-size: 2.5em;
+        }
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: #333;
+            float: left;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: width 0.3s;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #4CAF50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="datetime-local"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #45a049;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #327435;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .button-group a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #4c91af;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        .button-group a:hover {
+            background-color: #327435;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>教师信息管理系统</h1>
+</div>
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li><a th:href="@{/teacher_message}">教师信息</a></li>
+        <li><a href="#">教师预约</a></li>
+        <li><a href="/teacher_day">教师日程</a></li>
+        <li><a href="/projects">教师科研成果</a></li>
+        <li><a href="/search">教师检索</a></li>
+        <li><a href="/recommend-teachers">教师推荐</a></li>
+    </ul>
+</div>
+<div class="content">
+    <div class="container">
+        <h2>创建新的预约</h2>
+        <form id="createForm" method="post" th:action="@{/appointments/{username}/save(username=${username})}">
+            <div class="form-group">
+                <label for="studentName">学生姓名：</label>
+                <input type="text" id="studentName" name="studentName" th:value="${username}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="appointmentTime_start">预约开始时间：</label>
+                <input type="datetime-local" id="appointmentTime_start" name="appointmentTime_start" required>
+            </div>
+            <div class="form-group">
+                <label for="appointmentTime_end">预约结束时间：</label>
+                <input type="datetime-local" id="appointmentTime_end" name="appointmentTime_end" required>
+            </div>
+            <div class="form-group">
+                <label for="teacher">选择教师：</label>
+                <select id="teacher" name="teacherId" required>
+                    <option th:each="teacher : ${teachers}" th:value="${teacher.id}" th:text="${teacher.name}"></option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button type="submit">创建</button>
+                <a th:href="@{/appointments/{username}(username=${username})}">预约列表</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

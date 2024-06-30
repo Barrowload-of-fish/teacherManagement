@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>教师预约管理</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      grid-template-columns: 200px 1fr;
+      grid-template-areas:
+        "header header"
+        "sidebar content";
+      height: 100vh;
+    }
+
+    .header {
+      grid-area: header;
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+
+    .sidebar {
+      grid-area: sidebar;
+      background-color: #333;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.2em;
+    }
+
+    .sidebar ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      grid-area: content;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    button {
+      padding: 6px 12px;
+      margin: 0 5px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    form {
+      display: inline;
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1>教师信息管理系统</h1>
+</div>
+<div class="content" id="content">
+  <h1>预约管理</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th>学生姓名</th>
+      <th>预约开始时间</th>
+      <th>预约结束时间</th>
+      <th>是否批准</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="appointment : ${appointments}">
+      <td th:text="${appointment.id}">编号</td>
+      <td th:text="${appointment.studentName}">学生姓名</td>
+      <td th:text="${appointment.appointmentTime_start}">预约开始时间</td>
+      <td th:text="${appointment.appointmentTime_end}">预约结束时间</td>
+      <td th:text="${appointment.approved ? '是' : '否'}">是否批准</td>
+      <td>
+        <form th:action="@{'/teacher_appointments/' + ${id} + '/approve'}" method="post">
+          <input type="hidden" name="appointmentId" th:value="${appointment.id}" />
+          <button type="submit" th:disabled="${appointment.approved}">批准</button>
+        </form>
+        <form th:action="@{'/teacher_appointments/' + ${id} + '/delete'}" method="post">
+          <input type="hidden" name="appointmentId" th:value="${appointment.id}" />
+          <button type="submit">删除</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <form th:action="@{'/teacher_appointments/' + ${id} + '/set_appointment'}" method="post">
+    <label for="allow_appointmentTime_start">允许预约开始时间：</label>
+    <input type="time" id="allow_appointmentTime_start" name="allow_appointmentTime_start" required />
+    <label for="allow_appointmentTime_end">允许预约结束时间：</label>
+    <input type="time" id="allow_appointmentTime_end" name="allow_appointmentTime_end" required />
+    <button type="submit">设置预约时间</button>
+  </form>
+</div>
+</body>
+</html>

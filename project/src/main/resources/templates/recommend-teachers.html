@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>教师推荐</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: white;
+            font-size: 2.5em;
+        }
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: #333;
+            float: left;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: width 0.3s;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        .container {
+            padding: 20px;
+        }
+        .content-box {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        button {
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            padding: 10px 20px; /* Some padding */
+            border: none; /* Remove borders */
+            border-radius: 12px; /* Rounded corners */
+            cursor: pointer; /* Pointer/hand icon */
+        }
+        button:hover {
+            background-color: #45a049; /* Darker green */
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .search-form {
+            margin-bottom: 20px;
+        }
+        .search-form input, .search-form select {
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 1em;
+        }
+        .teacher-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .teacher-list li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .teacher-list li a {
+            text-decoration: none;
+            color: #333;
+        }
+        .teacher-list li a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .toggle-btn {
+                display: block;
+            }
+        }
+    </style>
+    <script>
+        function loadAppointments() {
+            var teacherId = document.getElementById("teacherSelect").value;
+            fetch(`/teacher_day/${teacherId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById("appointmentsContainer").innerHTML = html;
+                });
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <h1>教师信息管理系统</h1>
+</div>
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li><a th:href="@{/teacher_message}">教师信息</a></li>
+        <li><a>教师预约</a></li>
+        <li><a href="/teacher_day">教师日程</a></li>
+        <li><a href="/projects">教师科研成果</a></li>
+        <li><a href="/search">教师检索</a></li>
+        <li><a href="/recommend-teachers">教师推荐</a></li>
+    </ul>
+</div>
+<div class="content" id="content">
+    <div class="container">
+        <h1>教师推荐</h1>
+        <div class="content-box">
+            <form class="search-form" method="get" action="/recommend-teachers">
+                <input type="text" name="researchDirection" placeholder="研究方向" />
+                <select name="college">
+                    <option value="">选择学院</option>
+                    <option th:each="college : ${colleges}" th:value="${college}" th:text="${college}"></option>
+                </select>
+                <select name="title">
+                    <option value="">选择职称</option>
+                    <option th:each="title : ${titles}" th:value="${title}" th:text="${title}"></option>
+                </select>
+                <button type="submit">搜索</button>
+            </form>
+            <ul class="teacher-list">
+                <li th:each="teacher : ${recommendedTeachers}">
+                    <h2><a th:href="@{/teacher-info/{teacherId}(teacherId=${teacher.id})}" th:text="${teacher.name}">教师姓名</a></h2>
+                    <p>学院: <span th:text="${teacher.college}"></span></p>
+                    <p>职称: <span th:text="${teacher.title}"></span></p>
+                    <p>研究方向: <span th:text="${teacher.researchDirection}"></span></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="toggle-btn" id="toggle-btn">☰</div>
+
+<script>
+    document.getElementById('toggle-btn').addEventListener('click', function() {
+        var sidebar = document.getElementById('sidebar');
+        var content = document.getElementById('content');
+        if (sidebar.style.width === '200px') {
+            sidebar.style.width = '0';
+            content.style.marginLeft = '0';
+        } else {
+            sidebar.style.width = '200px';
+            content.style.marginLeft = '220px';
+        }
+    });
+</script>
+</body>
+</html>

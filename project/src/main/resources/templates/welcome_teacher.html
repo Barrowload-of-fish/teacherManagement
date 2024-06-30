@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>教师信息管理系统</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: #333;
+            float: left;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: width 0.3s;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        .welcome-message {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .welcome-message h1 {
+            font-size: 2em;
+            color: #4CAF50;
+        }
+        .welcome-message p {
+            font-size: 1.2em;
+        }
+        .welcome-message button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .welcome-message button:hover {
+            background-color: #45a049;
+        }
+        .toggle-btn {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .toggle-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>教师信息管理系统</h1>
+</div>
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li><a href="/teacher_message">教师信息</a></li>
+        <li><a th:href="@{/teacher_appointments/{id}(id=${teacher.id})}">教师预约管理</a></li>
+        <li><a th:href="@{/edit_project/{leader}(leader=${teacher.name})}">教师科研成果编辑</a></li>
+
+
+        <li><a href="/teacherday">教师日程</a></li>
+        <li><a href="/change_password">修改密码</a></li> <!-- Add Change Password Link -->
+    </ul>
+</div>
+<div class="content" id="content">
+    <div class="welcome-message">
+        <h1>Welcome <span th:if="${teacher != null}" th:text="${teacher.name}"></span></h1>
+        <p>Your teacher ID is: <span th:if="${teacher != null}" th:text="${teacher.id}"></span></p>
+    </div>
+</div>
+<div class="toggle-btn" id="toggle-btn">☰</div>
+
+<script>
+    document.getElementById('toggle-btn').addEventListener('click', function() {
+        var sidebar = document.getElementById('sidebar');
+        var content = document.getElementById('content');
+        if (sidebar.style.width === '200px') {
+            sidebar.style.width = '0';
+            content.style.marginLeft = '0';
+        } else {
+            sidebar.style.width = '200px';
+            content.style.marginLeft = '220px';
+        }
+    });
+</script>
+</body>
+</html>

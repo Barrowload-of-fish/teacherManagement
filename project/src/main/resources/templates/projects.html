@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教师信息管理系统</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f7;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .main {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 60px);
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            overflow-y: auto;
+        }
+        .content h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .create-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .create-button:hover {
+            background-color: #218838;
+        }
+        .message {
+            color: green;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        table th {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        table tr:hover {
+            background-color: #e9ecef;
+        }
+        .delete-button {
+            background-color: #ffc107;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .delete-button:hover {
+            background-color: #e0a800;
+        }
+        .empty-message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f44336;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>教师信息管理系统</h1>
+</div>
+<div class="main">
+    <div class="sidebar" id="sidebar">
+        <ul>
+            <li><a th:href="@{/teacher_message}">教师信息</a></li>
+            <li><a href="#">教师预约</a></li>
+            <li><a href="/teacher_day">教师日程</a></li>
+            <li><a href="/projects">教师科研成果</a></li>
+            <li><a href="/search">教师检索</a></li>
+            <li><a href="/recommend-teachers">教师推荐</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>教师项目</h1>
+        <div th:if="${not #lists.isEmpty(projects)}">
+            <table>
+                <thead>
+                <tr>
+                    <th>项目编号</th>
+                    <th>项目名称</th>
+                    <th>实验室</th>
+                    <th>所属学院</th>
+                    <th>负责人</th>
+                    <th>学生数</th>
+                    <th>教师数</th>
+                    <th>开始日期</th>
+                    <th>结束日期</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="project : ${projects}">
+                    <td th:text="${project.projectId}"></td>
+                    <td th:text="${project.name}"></td>
+                    <td th:text="${project.laboratory}"></td>
+                    <td th:text="${project.description}"></td>
+                    <td th:text="${project.leader}"></td>
+                    <td th:text="${project.numberOfStudents}"></td>
+                    <td th:text="${project.numberOfTeachers}"></td>
+                    <td th:text="${project.startDate}"></td>
+                    <td th:text="${project.endDate}"></td>
+                    <td th:text="${project.status}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${#lists.isEmpty(projects)}" class="empty-message">
+            <p>当前老师还未有项目。</p>
+        </div>
+    </div>
+</div>
+<script>
+    // 当页面加载时检查是否有错误消息，有则显示弹窗
+    $(document).ready(function() {
+        if ($("[th\\:text='${errorMessage}']").text().trim().length > 0) {
+            $('#errorModal').modal('show');
+        }
+    });
+</script>
+</body>
+</html>

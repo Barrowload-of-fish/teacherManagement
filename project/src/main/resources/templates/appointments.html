@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>预约管理</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eef2f7;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    .main {
+      display: flex;
+      flex-grow: 1;
+      height: calc(100vh - 60px);
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #333;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+    .sidebar ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.2em;
+    }
+    .sidebar ul li a:hover {
+      text-decoration: underline;
+    }
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 20px;
+      overflow-y: auto;
+    }
+    .content h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .create-button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-bottom: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .create-button:hover {
+      background-color: #218838;
+    }
+    .message {
+      color: green;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+    table th, table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    table th {
+      background-color: #f8f9fa;
+      color: #333;
+    }
+    table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    table tr:hover {
+      background-color: #e9ecef;
+    }
+    .delete-button {
+      background-color: #ffc107;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .delete-button:hover {
+      background-color: #e0a800;
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1>教师信息管理系统</h1>
+</div>
+<div class="main">
+  <div class="sidebar" id="sidebar">
+    <ul>
+      <li><a th:href="@{/teacher_message}">教师信息</a></li>
+      <li><a href="#">教师预约</a></li>
+      <li><a href="/teacher_day">教师日程</a></li>
+      <li><a href="/projects">教师科研成果</a></li>
+      <li><a href="/search">教师检索</a></li>
+      <li><a href="/recommend-teachers">教师推荐</a></li>
+    </ul>
+  </div>
+  <div class="content">
+    <h1>预约列表</h1>
+    <button class="create-button" th:onclick="|location.href='@{/appointments/{username}/create(username=${username})}'|">创建新预约</button>
+    <div th:if="${message}" class="message" th:text="${message}"></div>
+    <table id="appointmentTable">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>学生姓名</th>
+        <th>预约开始时间</th>
+        <th>预约结束时间</th>
+        <th>教师</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="appointment : ${appointments}">
+        <td th:text="${appointment.id}">0</td>
+        <td th:text="${appointment.studentName}">John Doe</td>
+        <td th:text="${appointment.appointmentTime_start}">2023-06-05T10:00</td>
+        <td th:text="${appointment.appointmentTime_end}">2023-06-05T10:00</td>
+        <td th:text="${appointment.teacher.name}">Mr. Smith</td>
+        <td th:text="${appointment.approved ? '已批准' : '未批准'}">已批准</td>
+        <td>
+          <button class="delete-button" th:if="${!appointment.approved}" th:onclick="|location.href='@{/appointments/{id}/delete(id=${appointment.id})}'|">删除</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  // 当页面加载时检查是否有错误消息，有则显示弹窗
+  $(document).ready(function() {
+    if ($("[th\\:text='${errorMessage}']").text().trim().length > 0) {
+      $('#errorModal').modal('show');
+    }
+  });
+</script>
+</body>
+</html>
